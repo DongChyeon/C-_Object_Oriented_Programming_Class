@@ -1,0 +1,4 @@
+﻿  homework9-2.cpp
+C:\Users\Donghyeon Kim\source\repos\Oriented_Programming_Class\Homework9-2\homework9-2.cpp(19,13): warning C4244: 'return': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\Donghyeon Kim\source\repos\Oriented_Programming_Class\Homework9-2\homework9-2.cpp(23,13): warning C4244: 'return': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  Homework9-2.vcxproj -> C:\Users\Donghyeon Kim\source\repos\Oriented_Programming_Class\Debug\Homework9-2.exe
