@@ -24,13 +24,16 @@ public:
 };
 
 int main() {
-	::distance a;	// STL 표준 라이브러리에..std::distance 라는 template이 정의되어 있다. 따라서 범위지정자 사용
-	a.set_distance(60.0);
-	a.trav_time();
+	::distance a;	// STL 표준 라이브러리에 std::distance 라는 template이 정의되어 있다. 따라서 다음과 같이 사용
+	::distance* p;
+	p = &a;
+	p->set_distance(60.0);
+	p->trav_time();
 
 	metric b;
-	b.set_distance(120.0);
-	b.trav_time();
+	p = &b;
+	p->set_distance(120.0);
+	p->trav_time();
 
 	return 0;
 }

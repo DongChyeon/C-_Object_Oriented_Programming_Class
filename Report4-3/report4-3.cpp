@@ -17,7 +17,7 @@ int main() {
 	char arr3[5] = { 'a', 'b', 'c', 'd', 'e' };
 
 	cout << find(3, arr1, 4) << '\n';
-	cout << find((float)1.3, arr2, 3) << '\n';	// 1.2를 double형으로 인식하기에 형변환
+	cout << find(1.3f, arr2, 3) << '\n';
 	cout << find('b', arr3, 5) << "\n";
 
 	return 0;
