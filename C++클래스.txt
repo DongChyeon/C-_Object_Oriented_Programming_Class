@@ -1,0 +1,562 @@
+C++의 클래스
+
+클래스 
+객체의 형식을 명시하는 새로운 자료형
+데이터와 그 데이터 상에 동작한 코드를 포함
+데이터와 코드를 연결
+객체를 만드는 방법을 명시하는 계획들의 집합
+멤버 변수(클래스 내에 선언된 변수), 멤버 함수(클래스 내에서 선언된 함수)로 구서오디어있다.
+키워드 class를 사용함으로써 생성한다.
+객체 : 클래스의 인스턴스
+클래스의 변수를 선언할 때 그 클래스의 객체가 생성된다.
+객체는 물리적인 메모리를 가지고 있지만 클래스 정의는 메모리 공간을 가지고 있지 않다.
+
+ex)
+class queue {
+private:	// 클래스 내의 다른 멤버들에 의해서만 접근, 캡슐화가 수행되는 한 가지 방법
+	int q[100];
+	int sloc, rloc;
+public:	// 프로그램의 다른 부분에서도 접근 가능, 이러한 공용함수로 클래스의 전용 원소 접근 가능
+	void init();
+	void qput(int i);
+	int qget();
+} (때에 따라서 여기서 클래스의 객체들을 선언);
+
+클래스 멤버 함수 구현
+클래스의 멤버인 함수를 구현할 때, 함수 이름과 클래스 이름을 함께 써서 컴파일러에게 함수의 소속을 알려야 함
+:: - 범위지정 연산자, 함수의 소속 클래스 명시
+. - 멤버 함수 호출 시 사용
+ex)
+void queue::qput(int i) {
+	if(sloc==99) {
+	  cout << "Queue is full.\n"
+	  return;
+	}
+	sloc++;
+	q[sloc] = i;
+}
+head파일과 cpp파일 구분해서 저장(권장)
+
+ex)
+class queue {
+private:
+	int q[100];
+	int rloc, sloc;
+public:
+	void init();
+	void qput(int i);
+	int qget();
+};	// queue.h 저장
+
+void queue::init() {
+	rloc = sloc = -1;
+}
+
+void queue::qput(int i) {
+	if(sloc == 99) {
+		cout << "Queue is full.\n";
+		return;
+	}
+	sloc++;
+	q[sloc] = i;
+}
+
+int queue::qget() {
+	if(rloc -- sloc) {
+		cout << "Queue underlow.\n";
+		return 0;
+	}
+	rloc++;
+	return q[rloc[;
+}	// q.cpp 저장
+
+생성자와 소멸자
+생성자 : 클래스이름과 동일, 리턴 타입 없음, 객체를 생성할 때 실행, 매개변수를 가질 수 있음
+소멸자 : ~클래스이름과 동일, 객체가 사라질 때 실행
+객체는 메인함수 return 시 자동 소멸
+생성자에 인수전달 시 queue a = queue(1); 같은 형식 사용 안함
+queue a(1), b(2); 이런 형식으로 사용(여기서 queue는 클래스명)
+생성자가 매개변수를 가지고 있을 시 기본 생성자(매개변수가 없는) 사용시 컴파일 에러가 남
+
+클래스와 구조체
+C++에서는 구조체 역시 객체 지향적인 성질을 지님
+클래스와 구조체가 상호 교환가능하다.
+but, 클래스 멤버들은 전용(private)인 반면, 구조체 멤버들은 공용(public)이다.
+ex)
+struct cl {
+	int get_i();
+	void put_i(int j);	//구조체는 잠정적으로 공용(public)
+private:
+	int i;
+};
+int cl::get_i() {
+	return i;
+}
+void cl::put_i(int j) {
+	i = j;
+}
+
+
+class cl {
+	int i;	// 클래스는 잠정적으로 전용(private)
+public:
+	int get_i();
+	void put_i(int j);
+};
+int cl::get_i() {
+	return i;
+}
+void cl::put_i(int j) {
+	i = j;
+}
+
+C++에서 구조체는 주로 메모리만 있을 때 사용한다.
+
+인라인 함수
+함수의 호출 지점에서 함수의 코드가 라인으로 확장되는 함수
+함수를 호출할 때 인수 저장과 함수 복귀 등을 위한 명령이 필요한데, 
+인라인 함수는 이러한 지체가 없어 프로그램이 효율적이다.
+하지만 인라인 함수가 큰 경우에는 프로그램의 전체 크기가 증가한다.
+
+인라인 함수 생성 방법
+inline 수정자를 사용
+멤버 함수에 대한 코드를 클래스 선언 안에서 정의, 키워드 inline을 선언 앞에 붙일 필요가 없다.
+
+ex)
+class cl {
+private:
+	int i;
+public:
+	int get_i();
+	void put_i(int j);
+};
+inline int cl::get_i() {
+	return i;
+}
+inline void cl::put_i(int j) {
+	i = j;
+}
+
+ex)
+class cl {
+private:
+	int i;
+public:
+	int get_i() {return i;}
+	void put_i(int j) {i = j;}	// 클래스 선언 안에서 선언할 때 짧은 경우 인라인 함수로 취급
+};
+
+객체들의 배열
+ex)
+#include <iostream>
+using namespace std;
+
+enum resolution {low, medium, high};
+class display {
+private:
+	int width;
+	int height;
+	resolution res;
+public:
+	void set_dim(int w, int h) {width = w; height = h;}
+	void get_dim(int &w, int &h) {w = width; h = height;}
+	void set_res(resolution r) {res = r;}
+	resolution get_res() {return res;}
+};
+
+char names[3][7] = { "low", "medium", "high" };
+
+int main() {
+	display display_mode[3];
+	int i, w, h;
+	display_mode[0].set_res(low);
+	display_mode[0].set_dim(640, 480);
+	display_mode[1].set_res(medium);
+	display_mode[1].set_dim(800, 600);
+	display_mode[2].set_res(high);
+	display_mode[2].set_dim(1600, 1200);
+	cout << "Available display mods:\n\n";
+	for (i=0; i<3; i++) {
+		cout << names[display_mode[i].get_res()] << ": ";
+		display_mode[i].get_dim(w, h);
+		cout << w << "by" << h << "\n";
+	}	
+	return 0;	// 객체 배열 선언하고 각 배열안에 있는 객체의 멤버함수 호출 가능
+}
+
+객체 접근 방법
+객체 자체를 사용 : 도트 연산자 사용
+객체에 대한 포인터 사용 : 화살표 연산자 사용
+- 객체에 대한 포인터가 증가되거나 감소될 때 다음 객체를 가리키도록 증가하거나 감소한다.
+- &연산자를 사용하여 객체의 주소를 얻어냄
+
+ex)
+#include <iostream>
+using namespace std;
+
+class P_example {
+private:
+	int num;
+public:
+	void set_num(int val) {num = val;}
+	void show_num();
+};
+
+void P_example::show_num() {
+	cout << num << "\n";
+}
+
+int main() {
+	P_example ob[2], *p;	// 객체를 직접 접근, p는 P_example 객체만 가리킬 수 있음
+	ob[0].set_num(10);
+	ob[1].set_num(20);
+	p = &ob[0];
+	p->show_num();
+	p++ ; 	// 다음 객체로 전진
+	p->show_num();
+	p--;	// 이전 객체로 후퇴
+	p->show_num();
+	return 0;
+}
+
+프렌드 함수
+멤버가 아닌 함수가 클래스의 전용 멤버를 접근할 수 있도록 허용하는 것으로 함수를 클래스의 프렌드로 선언함
+함수의 프로토타입을 클래스 선언의 public 구역에 포함하고 앞에 friend 키워드를 쓴다.
+사용이유
+-연산자를 중복하는데 유용
+-I/O 함수의 생성을 단순화
+-둘 또는 그 이상의 클래스들이 프로그램의 다른 부분과 상대적으로 연관될 수 있는 멤버들을
+ 포함할 수 있다.
+ex)
+#include <iostream>
+using namespace std;
+
+class myclass {
+private:
+	int a, b;
+public:
+	myclass(int i, int j) { a=i; b=j; }
+	friend int sum(myclass x);
+};
+
+int sum(myclass x) {	// myclass의 외부에 있음
+	return x.a + x.b;
+}
+
+#include <iostream>
+using namespace std;
+
+const int IDLE=0;
+const int INUSE=1;
+class C2;	// 전방 선언
+class C1 {
+private:
+	int status;
+public:
+	void set_status(int state);
+	int idle(C2 b);	// 지금 C1의 멤버이다.
+};
+class C2 {
+private:
+	int status;
+public:
+	void set_status(int state);
+	friend int C1::idle(C2 b);	// idle()이 C2의 프렌드가 되도록 선언할 때 범위 지정 연산자(::)를 사용
+};
+
+void C1::set_status(int state) { status = state; }
+void C2::set_status(int state) { status = state; } 	// idle()은 C1의 멤버이나, C2의 프렌드이다.
+int C1::idle(C2 b) {
+	if (status || b.status) return 0;
+	else return 1;
+}
+
+int main() {
+	myclass n(3, 4);
+	cout << sum(n);
+	return 0;
+}
+
+int main() {
+	C1 x;
+	C2 y;
+	
+	x.set_status(IDLE);
+	y.set_status(IDLE);
+	
+	if(x.idle(y)) cout << "Screen Can Be Used.\n";
+	else cout << "Pop-up In Use.\n";
+
+	x.set_status(INUSE);
+	
+	if(x.idle(y)) cout << "Screen Can Be Used.\n";
+	else cout << "Pop-up In Use.\n";
+	
+	return 0;
+}
+
+생성자의 중복 : 다른 유형의 함수처럼 생성자 함수도 오버로딩 가능
+
+동적 초기화
+지역변수와 전역 변수 모두 실행 시에 초기화되는 것을 말함
+동적 초기화에서는 변수를 실행 시에 그 변수가 선언된 시점에서 유효한 C++식을 사용하여
+초기화할 수 있다.
+-변수를 다른 변수 또는 함수 호출을 이용하여 초기화할 수 있음
+동적 초기화를 생성자에 적용하기
+-실행 시에만 알려지는 정보를 이용하여 필요한 객체를 정확히 생성할 수 있다.
+-timer() 생성자 중복 예에서 사용
+	그 순간에 사용 가능한 데이터의 형식에 가장 가까운 생성자를 사용할 수 있는 융통성을 제공
+
+ex)
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+
+class timer {
+private:
+	int seconds;
+public:
+	timer(char *t) { seconds = atoi(t); }
+	timer(int t) { seconds = t; }
+	timer(int min, int sec) { seconds = min*60 + sec; }
+	void run();
+};
+void timer::run() {
+	clock_t t1;
+	t1 = clock();
+	while((clock()/CLOCKS_PER_SEC-t1/CLOCKS_PER_SEC) < seconds);
+		cout << "\a";
+}
+
+int main() {
+	timer a(10);	// timer(int t) 호출
+	a.run();
+	cout << "Enter number of seconds: ";
+	char str[80];
+	timer b(str);	// timer(char *t) 호출
+	b.run();
+	cout << "Enter minutes and seconds: ";
+	int min, sec;
+	cin >> min >> sec;
+	timer c(min, sec);	// timer(int min, int sec) 호출
+	c.run();
+	return 0;
+}
+
+객체 치환하기
+두개의 객체가 같은 형일 경우 치환 가능
+객체가 치환될 때 비트 단위로 복사된다
+한 객체를 다른 객체에 치환하는 것은 두 객체 간 동일한 데이터를 갖는다는 것일뿐
+두 객체는 여전히 별개이다.
+-한 객체의 데이터를 수정하는 것은 다른 객체의 데이터에 아무런 영향을 미치지 않는다.
+
+객체를 함수에 전달하기
+객체는 정상적인 C++의 값에 의한 매개변수 전달 방식을 사용함으로써 함수에 전달
+-객체의 복사본이 함수에 전달됨
+생성자, 소멸자, 객체 전달
+-인수의 복사본이 함수 호출동안 만들어질 때, 객체의 복사 생성자가 호출된다. 생성자는 실행되지 않는다.
+-복사 생성자를 정의할 수 있으며, 정의하지 않는 경우, 디폴트 복사 생성자가 만들어지고, 디폴트 복사 생성자는
+객체를 비트 단위로 복사한다.
+-함수가 끝나고 인수로 사용된 객체의 복사본이 소멸될 때, 소멸자가 호출된다.
+
+ex)
+#include <iostream>
+using namespace std;
+
+class OBJ { 
+private:
+	int i;
+public:
+	void set_i(int x) { i = x; }
+	void out_i() {cout << i << " "; }
+};
+
+void f(OBJ x) {
+	x.out_i();
+	x.set_i(100);	// 복사본에만 영향을 미침
+	x.out_i();
+}
+
+int main() {
+	OBJ o;
+	o.set_i(10);
+	f(o);	// 복사 생성자가 호출됨, 따라서 main()내의 객체 o에 영향을 주지 않음
+	o.out_i();
+	return 0;
+}
+
+생성자, 소멸자, 객체 전달 예
+#include <iostream>
+using namespace std;
+class myclass {
+private:
+	int val;
+public:
+	myclass(int i) { val - i; cout << "Constructing\n"; }
+	~myclass() { cout << "Destructing\n"; }
+	int getval() { return val; }
+};
+void display(myclass ob) {
+	cout << ob.getval() << '\n';
+}
+int main() {
+	myclass a(10);
+	display(a);
+	return 0;
+}
+
+참조 매개변수로 객체 전달
+#incldue <iostream>
+#incldue <cstdlib>
+using namespace std;
+
+class myclass {
+private:
+	int *p;
+public:
+	myclass(int i);
+	~myclass();
+	int getval() { return *p; }
+};
+myclass::myclass(int i) {
+	cout << "Allocating p\n";
+	p = new int;
+	*p = i;
+}
+myclass::~myclass() {
+	cout << "Freeing p\n";
+	delete p;
+}
+
+void display(myclass &ob) {	// ob는 참조에 의해 전달되기 때문에 인수의 복사본이 만들어지지 않음
+	cout << ob.getval() << '\n';
+}
+
+int main() {
+	myclass a(10);
+	display(a);
+	return 0;
+}
+
+객체의 반환
+클래스 형을 반환하는 것으로 함수를 선언한다.
+정상적인 return 문장을 사용하여 그 형의 객체를 반환한다.
+객체가 함수에 의해 반환될 떄 임시 객체가 자동으로 생성되며, 이때 생성된 임시 객체가 반환값을 저장한다.
+실제 이 임시 객체가 함수에 의해 반환되며, 반환된 후에는 소멸된다. 이 임시 객체가 만들어질 때 복사 생성자가
+실행되며, 소멸할 때는 소멸자가 실행된다.
+복사 생성자가 정의되어 있으면 정의된 복사생성자가 실행되고, 정의되어 있지 않으면 디폴트 복사 생성자가 실행된다.
+
+ex)
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+class sample {
+private:
+	char s[80];
+public:
+	void show() { cout <<  s << "\n"; }
+	void set(char *str) { strcpy(s, str)' }
+};
+
+sample input() {
+	char instr[80];
+	sample str;
+	cout << "Enter a string: ";
+	cin >> instr;
+	str.set(instr);
+	return str;
+}
+
+int main() {
+	sample ob;
+	ob = input();	// 반환된 객체를 ob에 치환
+	ob.show();
+	return 0;
+}
+
+복사 생성자의 생성과 사용
+복사 생성자를 정의하여 객체의 함수 전달 또는 반환시 발생할 수 있는 메모리 해제 문제 및
+포인터에 의한 메모리 공유 문제를 해결할 수 있다.
+복사 생성자가 사용되는 3가지 경우
+1. 하나의 객체가 선언문에서 명시적으로 다른 객체를 초기화활 때
+2. 객체의 복사본이 함수에게 인수로 전달될 때
+3. 함수의 반환값으로 임시 객체가 생성될 때
+복사 생성자는 치환 연산에 적용되지 않음
+
+형식)
+classname (const classname &obj) {
+	// body of constructor
+}
+
+ex)
+myclass x = y; 	// y는 명시적으로 x를 초기화한다.
+func1(y);		// y가 인수로 전달된다.
+y = func2(); 	// y는 반환되는 객체를 받는다.
+
+복사 생성자의 예
+#include <iostream>
+#include <cstlib>
+using namespace std;
+
+class myclass {
+private:
+	int *p;
+public:
+	myclass(int i);	// 정상적인 생성자
+	myclass(const myclass &obj);		// 복사 생성자
+	~myclass();
+	int getval { return *p; }
+};
+
+myclass::myclass(const myclass &obj) {
+	p = new int;
+	*p = *obj.p;	// 값을 복사한다.
+	cout << "Copy constructor called.\n";
+}
+
+myclass::myclass(int i) {
+	cout << "Allocating p\n";
+	p = new int;
+	*p = i;
+}
+
+myclass::~myclass() {
+	cout << "Freeing p\n";
+	delete p;
+}
+
+void display(myclass ob) {
+	cout << ob.getval() << '\n';
+}
+
+int main() {
+	myclass a(10);	// myclass의 일반 생성자 호출
+	display(a);	// myclass의 복사 생성자 호출
+	return 0;
+}
+
+this 키워드
+멤버 함수가 호출될 때마다, 호출된 객체에 대한 this라는 하나의 포인터를 자동으로 받는다.
+this 포인터는 모든 멤버 함수들에 대한 묵시적인 매개변수이다.
+멤버 함수 내에서 this는 호출한 객체를 참조하기 위해 사용될 수 있다.
+
+ex)
+#include <iostream>
+using namespace std;
+
+class cl {
+private:
+	int il
+public:
+	void load_i(int val) { this->i val; }	// == i = val
+	int get_i() {return this->i; }	// == return i
+};
+
+int main() {
+	cl o;
+	o.load_i(100);
+	cout << o.get_i();
+	return 0;
+}

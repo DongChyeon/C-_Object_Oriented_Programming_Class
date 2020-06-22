@@ -1,0 +1,210 @@
+1. 일반 함수
+일반 함수란 여러 가지 자료형에 적용될 일반적인 연산들을 정의한다.
+일반 함수를 생성함으로써, 데이터의 종류와는 독립저긍로 알고리즘의 특성을 정의할 수 있다
+일반 함수가 정의되면 컴파일러는 함수가 실행될 때 사용되는 자료형을 위한 정확한 코드를 자동으로 만들어 낸다
+일반 함수는 키워드 template를 사용함으로써 생성된다
+형식
+template<class Ttype> ret-type func-name(parameter-list) {
+	// body of function
+}
+Ttype : 함수에 의해 사용될 자료형을 나타내는 이름
+ex)
+// 템플리트 함수의 예
+#include <iostream>
+using namespace std;
+
+template <class X> void swapargs(X &a, X &b) {
+	X temp;
+	
+	temp = a;
+	a = b;
+	b =temp;
+}
+X는 자리만 잡아주는 일반 자료형
+컴파일러는 특정한 버전의 함수를 생성할 때 실제 자료형으로 대체된다
+
+int main() {
+	int i = 10, j = 20;
+	double x = 10.1, y = 23.3;
+	char a = 'x', b = 'z';
+
+	swapargs(i, j);	// 정수들을 교환
+	swapargs(x, y)	// float들을 교환
+	swapargs(a, b);	// 문자들을 교환
+
+	return 0;
+}
+
+두 개의 일반 자료형을 갖는 함수
+#include <iostream>
+using namespace std;
+
+template <class type1, class type2) void myfunc(type1 x, type 2) {
+	cout << x << ' ' << y << '\n';
+}
+
+int main() {
+	myfunc(10, "hi");
+	myfunc(0.23, 10L);
+	return 0;
+}
+
+일반 함수를 중복하기
+//템플리트 함수를 중복하기
+#include <iostream>
+using namespace std;
+
+template <class X> void swapargs(X &a, X &b) {
+	X temp;
+
+	temp = a;
+	a = b;
+ 	b = temp;
+	cout << "Inside template swapargs.\n";
+}
+
+// 이것은 int형을 위해 swapargs()의 일반 함수 버전을 중복한다.
+void swapargs(int &a, int &b) {
+	int temp;
+
+	temp = a;
+	a = b;
+	b = temp;
+	cout << "Inside swapargs int specialization.\n";
+}
+
+int main() {
+	int i = 10; j = 20;
+	double x = 10.1, y = 23.3;
+	char a = 'x', b = 'z';
+
+	swapargs(i, j);	// 명시적으로 중복된 swapargs()을 호출한다.
+	// 일반 함수가 명시적으로 중복되었기 때문에 컴파일러는 이 버전의 swapargs() 함수를 생성하지 않는다
+	swapargs(x, y);	// 일반 함수 swapargs()을 호출한다
+	swapargs(a, b); 	// 일반 함수 swapargs()을 호출한다
+
+	return 0;
+}
+
+함수 템플리트 중복하기
+// 함수 템플리트 선언을 중복한다.
+#include <iostream>
+using namespace std;
+
+// f() 템플리트의 첫 번째 버전
+template <class X> void f(X a) { cout << "Inside f(X a)\n"; }
+
+// f() 템플리트의 두 번째 버전
+template <class X, class Y> void f(X a, Y b) { cout << "Inside f(X a, Y b)\n"; }
+
+int main() {
+	f(10);	// f(X)를 호출한다.
+	f(10, 20);	// f(X, Y)를 호출한다.
+	
+	return 0;
+}
+
+템플리트 함수와 함께 표준 매개변수를 사용하기
+// 템플리트 함수에서 표준 매개변수를 사용한다.
+#include <iostream>
+using namespace std;
+
+template <class X> void repeat(X data, int times) {
+	do {
+		cout << data << "\n";
+		times--;
+	} while(times);
+}	// 표준 매개변수와 일반 자료형 매개변수를 템플리트 함수에서 섞어쓸 수 있다.
+
+int main() {
+	repeat("This is a test", 3);
+	repeat(100, 5);
+	repeat(99.0/2, 4);
+	return 0;
+}
+
+일반 클래스
+일반 클래스를 정의할 때, 그 클래스에 의해 사용되는 모든 알고리즘을 정의하는 클래스를 생성한다.
+그러나, 조작되는 데이터의 실제 자료형은 그 클래스의 객체가 생성될 때 매개변수로 명시된다.
+일반 클래스는 클래스가 일반화될 수 있는 연산을 사용할 떄 유용하다
+형식 : template <class Ttype> class class-name { }
+-Ttype : 자리만 차지하는 형 이름(클래스가 인스턴스화될 때 명시됨)
+일반 클래스의 인스턴스 생성형식
+-class-name <type> ob
+-type : 클래스가 동작할 데이터의 형 이름
+일반 클래스의 멤버 함수들은 자동으로 일반 함수가 되므로 template를 사용할 필요는 없다
+
+ex)
+// 일반 큐 클래스를 보여준다.
+#include <iostream>
+using namespace std;
+
+const int SIZE = 100;
+// 이것은 일반 큐 클래스를 생성한다.
+template <class QType> class queue {
+private:
+	QType q[SIZE];
+	int sloc, rloc;
+public:
+	queue() { sloc = rloc = 0; }
+	void qput(QType i);
+	QType qget();
+};
+
+// 하나의 원소를 큐에 넣는다.
+template <class QType> void queue<QType>::qput(QType i)
+{
+	if (sloc == SIZE) {
+		cout << "Queue is full.\n";
+		return;
+	}
+	sloc++;
+	q[sloc] = i;
+}
+
+// 큐에서 하나의 원소를 얻는다.
+template <class QType> QType queue<QType>::qget()
+{
+	if (rloc == sloc) {
+		cout << "Queue Underflow.\n";
+		return 0;
+	}
+	rloc++;
+	return q[rloc];
+}
+
+int main()
+{
+	// 두 개의 정수 큐를 생성한다.
+	queue<int> a;
+	a.qput(10);
+	a.qput(20);
+
+	cout << a.qget() << " ";
+	cout << a.qget() << " ";
+
+	return 0;
+}
+
+두 개의 일반 자료형을 가진 예
+// 이 예는 클래스 정의 내에 두 개의 일반 자료형을 사용한다.
+#include <iostream>
+using namespace std;
+
+template <class Type1, class Type2> class myclass {
+	Type1 i;
+	Type2 j;
+public:
+	myclass(Type1 a, Type2 b) { i = a; j = b; }
+	void show() { cout << i << ' ' << j << '\n'; }
+};
+
+int main() {
+	myclass<int, double> ob(10, 0.23);
+	myclass<char, char *> ob2('X', "This is a test");
+	
+	ob1.show();	// int와 double을 보여준다.
+	ob2.show();	// char와 char *을 보여준다.
+
+	return 0;
+}

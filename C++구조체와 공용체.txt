@@ -1,0 +1,114 @@
+구조체 : 하나의 이름으로 참조되는 변수들의 모임으로 군집 자료형이라고도 하며
+복합 자료형이라 부른다
+멤버 : 구조체를 구성하는 변수
+        원소 또는 필드라고도 부름
+일반형식
+ex)
+struct inv_type {
+	char item[40];
+	double cost;
+	double retail;
+	int on_hand;
+	int lead_time;
+}; struct inv_type(구조체 이름) inv_var(구조체 변수);
+구조체 변수를 선언하는 순간 메모리가 할당된다.
+
+구조체 멤버에 접근하기
+개개의 구조체 멤버는 도트 연산자를 사용하여 접근
+ex)
+structure-varname.member-name
+inv_var.cost = 10.39;
+구조체의 배열
+inv_type invtry[100];
+invtry[2].on_hand;
+
+함수에게 구조체 전달하기
+전체적인 구조체가 값에 의한 호출 방식의 매개변수 전달 방식에 의해 전달
+큰 구조체를 전달하는 것은 상당한 시간지체를 야기
+인수의 데이터 타입이 매개변수의 데이터 타입과 일치해야 한다.
+주로 참조 매개변수나 포인터로 전달한다.
+
+구조체 치환하기
+두 구조체가 같은 구조체형일 떄 하나의 구조체를 다른 구조체에 치환할 수 있다.
+ex)
+#include <iostream>
+using namespace std;
+
+struct stype {
+	int a, b;
+};
+
+int main() {
+	stype svar1, svar2;
+	svar1.a = 10; svar1.b = 10;
+	svar2.a = 20; svar2.b = 30;
+	svar1 = svar2;
+}
+svar1.a = 20, svar1.b = 30이 된다
+
+구조체에 대한 포인터와 화살표 연산자
+구조체 포인터는 다른 포인터 변수를 선언하는 것과 같이 선언한다.
+ex) inv_type *inv_pointer;
+구조체 변수의 주소
+ex)
+struct bal {
+	float balance;
+	char name[80];
+} person;
+bal *p;	// 구조체 포인터 선언
+p = &person;	// 구조체 변수인 person의 주소
+p->balance;	// 화살표 연산자
+큰 구조체가 함수에게 전달될 때 일어나는 시간지체 때문에, 많은 경우에
+구조체에 대한 포인터만 전달한다.
+
+구조체에 대한 참조
+구조체 참조는 함수 매개변수 또는 함수 반환형으로 흔히 사용한다
+구조체 참조를 통해 멤버들을 접근할 떄, 도트 연산를 사용한다.
+화살표 연산자는 포인터를 통해서 멤버들을 접근할 때만 사용한다.
+ex)
+struct my struct {
+	int a, b;
+};
+
+int func (mystruct &svar) {
+	svar.a = 10;
+	svar.b = 50;
+}
+(참조이기 때문에 내용이 실제로 바뀐다)
+
+중첩된 구조체
+ex)
+struct addr {
+	char name[40];
+	char street[40];
+	char city[40];
+	char zip[10];
+	};
+struct emp {
+	addr address;
+	float wage;
+	} worker;
+
+구조체는 역시 멤버로서 구조체에 대한 포인터를 포함한다.
+struct mystruct {
+	int a;
+	char str[80];
+	mystruct *sptr; 	// mystruct 구조체에 대한 포인터
+};
+
+비트 필드
+한 바이트 내의 단일 비트를 액세스하는 방법을 제공
+10장 ppt참고
+
+공용체
+같은 메모리 위치를 공유하는 둘 또는 그 이상의 변수들로 구성
+공용체는 같은 비트 형태를 둘 또는 그 이상의 다른 방법으로 표현한느 방법을 제공한다.
+ex)
+union utype {
+	short int i;
+	char ch;
+};
+utype u_var;	// 정의만 해서는 사용할 수 없다. 따라서 변수로 선언
+
+공용체의 크기는 가장 큰 자료형의 크기가 된다.
+

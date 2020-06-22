@@ -1,0 +1,219 @@
+C++ I/O 시스템
+
+C++ 스트림
+컴퓨터를 구성하는 여러 장치들에 공통적인 논리적 인터페이스
+정보를 생산하거나 소비하며, C++ I/O 시스템에 의해 물리적 장치와 연결되어 있다
+모든 스트림이 동일하게 동작하므로, 같은 I/O 함수와 연산자들이 거의 모든 유형의 장치에 작동할 수 있다.
+-화면에 출력하기 위해 사용한 방법을 디스크 파일이나 프린터에 출력하기 위해 사용할 수 있다.
+현재 위치 : 다음 파일 접근이 일어날 파일 내의 위치에 해당한다.
+
+종류
+텍스트 스트림
+-문자와 함께 사용
+-문자변환이 일어날 수 있다.
+-예: newline 문자 -> carriage-return/line feed 문자들
+이진 스트림
+-어떠한 데이터와도 함께 사용될 수 있다.
+-문자변환이 일어나지 않는다.
+
+C++의 미리 정의된 스트림
+C++는 프로그램이 시작될 때 자동으로 열리는 몇개의 스트림을 포함하고 있다.
+표준 입력 스트림 : cin
+표준 출력 스트림 : cout, cerr(프로그램 디버깅 또는 에러 정보가 기록되는 스트림)
+표준 스트림의 확장(16비트) 문자 버전 : wcin, wcout, wcerr, wclog
+
+포맷된 I/O
+두가지 방법
+-ios 멤버함수들을 이용한 포맷
+-I/O 조작자를 사용한 포맷
+
+ios 멤버함수들을 이용한 포맷
+ios는 하나의 C++ 스트림 클래스이다.
+ios클래스는 fmtflags라는 비트 마스크 열거형을 선언한다.
+값
+adjustfield	floatfield		right 		skipws
+basefield		hex		scientific		unitbuf
+boolalpha	internal		showbase	uppercase
+dec		left		showpoint
+fixed		oct		showpos
+
+플래그를 1로 설정하기 위해 setf() 함수 사용
+-형식 : setf(fmtflags flags);
+-예 : stream.setf(ios::showbase);
+
+ex)
+#include <iostream>
+using namespace std;
+
+int main() {
+	cout.setf(ios::showpos);
+	cout.setf(ios::scientific);
+	cout << 123 << " " << 123.23 << " ";
+
+	return 0;
+}
+
+#include <iostream>
+using namespace std;
+
+void showflags(ios::fmtflags f);
+
+int main() {
+	ios::ftmflags f;
+	
+	f = cout.flags();
+	
+	showflags(f);
+	cout.setf(ios::showpos);
+	cout.setf(ios::scientific);
+	f = cout.flags();
+	showflags(f);
+
+	cout.unsetf(ios::scientific);
+	
+	f = cout.flags();
+	showflags(f);
+	
+	return 0;
+}
+
+void showflags(ios::fmtflags f) {
+	long i;
+	for(i = 0x4000; i = i >> 1) {
+		if (i & f) cout << "1 ";
+		else cout << "0 ";
+	}
+
+	cout << "\n";
+}	// 비트값 출력
+
+필드의 너비, 정밀도, 채우는 문자 설정하기
+width()
+-streamsize width(streamsize len);
+-현재의 필드 너비를 반환하고 필드 너비를 len으로 설정
+fill()
+-char fill(char ch);
+-현재의 채우는 문자를 반환하며, 채우는 문자는 ch로 설정
+-채우는 문자는 디폴트로 스페이스(space)
+precision()
+-streamsize precision(streamsize num);
+-소수점 다음에 출력될 자리수를 반환하며, 그 값을 num으로 설정
+-디폴트로 6자리
+
+streamsize 형은 일종의 정수형으로 정의
+
+ex)
+#include <iostream>
+using namespace std;
+
+int main() {
+	cout.setf(ios::showpos);
+	cout.setf(ios::scientific);
+	cout << 123 << " " << 123.23 << "\n";
+	
+	cout.precision(2);	// 소수점 다음에 두 자리
+	cout.width(10);	// 10개 문자 너비의 필드로
+	cout << 123 << " ";
+	cout.width(10);	// 너비를 10으로 설정한다.
+	cout << 123.23 << "\n";
+
+	cout.fill('#');	// 채우는 문자로 #을 사용한다.
+	cout.width(10);
+	cout << 123 << " ";
+	cout.width(10);
+	cout << 123.23;
+
+	return 0;
+}
+
+I/O 조작자 사용하기
+ppt참고하기
+
+ex)
+#include <iostream>
+#include <iomanip>
+using namespace std;
+
+int main() {
+	cout << setprecision(2) << 1000.243 << endl;
+	cout << setw(20) << "Hello there.";
+
+	return 0;
+}
+
+파일 I/O
+<fstream> 헤더를 반드시 포함해야 함
+파일의 열기와 닫기
+1. 입력
+ifstream 클래스의 스트림을 선언해야만 한다.
+예 : ifstream in;
+2. 출력
+ofstream 클래스의 스트림을 선언해야만 한다.
+예 : ofstream out;
+3. 입출력
+fstream 클래스의 스트림을 선언해야만 한다.
+예 : fstream both;
+
+open()
+스트림을 생성한 후에 파일과 연결
+형식
+void stream::open(const char *filename, ios::openmode mode = ios::in);
+stream : ifstream, or ofstream, or fstream
+filename : 파일의 이름이며, 경로 지정자를 포함할 수 있다
+mode : 파일이 어떻게 열릴 것인가를 결정
+-ios::in	// 입력
+-ios::out	// 출력
+-ios::app	// 끝에 추가
+
+close()
+open된 파일을 닫는다.
+예 : mystream.close();
+
+텍스트 파일의 읽기와 쓰기
+// 파일에 쓴다.
+#include <iostream>
+#include <fstream>
+using namespace std;
+
+int main() {
+	ofstream out("test");	// ofstream out; out.open(test); 대신 묶어서 사용
+	if (!out) {
+		cout << "Cannot open file.\n";
+		return 1;
+	}
+
+	out << 10 << " " << 123.23 << "\n";
+	out << "This is a short text file.";
+
+	out.close();
+
+	return 0;
+}
+
+// 파일에서 읽는다.
+#include <iostream>
+#include <fstream>
+using namespace std;
+
+int main() {
+	chat ch;
+	int i;
+	float f;
+	char str[80];
+	
+	ifstream in("test");
+	if (!in) {
+		cout << "Cannot open file.\n";
+		return 1;
+	}
+	
+	in >> i;
+	in >> f;
+	in >> chl;
+	in >> str;
+	cout << i << " " << f << " " << ch << "\n";
+	cout << str;
+
+	in.close();
+	return 0;
+}

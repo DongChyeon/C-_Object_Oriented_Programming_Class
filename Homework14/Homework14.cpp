@@ -27,13 +27,11 @@ box add_box(box box1, box box2) {
 }
 
 box box::operator*(box box2) {
-    box temp;
-    
-    temp.l = l * box2.l;
-    temp.w = w * box2.w;
-    temp.h = h * box2.h;
+    l = l * box2.l;
+    w = w * box2.w;
+    h = h * box2.h;
 
-    return temp;
+    return *this;
 }
 
 int main() {

@@ -1,0 +1,302 @@
+C++ 연산자 중복
+
+연산자 중복
+사용 이유
+-연산자의 의미를 특정한 클래스를 위해 정의하는 것을 허용한다.
+형식
+type classname::operator#(arg-list)
+{
+	operation relative to the class
+}
+# : 중복 사용할 연산자
+type : 명시된 연산에 의햅 반환되는 값의 형
+
+ex)
+멤버 함수를 사용하는 연산자 중복
+#include <iostream>
+using namespace std;
+
+class three_d {
+private:
+	int x, y, z;	// 3-D 좌표
+public:
+	three_d() { x = y = z = 0; }
+	three_d(int i, int j, int k) {x = i; y = j; z = k; }
+
+	three_d operator+(three_d op2); 	// op1 을 포함하고 있다.
+	three_d operator=(three_d op2);	// op1 을 포함하고 있다.
+
+	void show();
+};
+
+three_d three_d::operator+(three_d op2) {
+	three_d temp;
+	temp.x = x + op2.x;	// 이 문장들은 정수 덧셈이고
+	temp.y = y + op2.y;	// + 는 정수 덧셈과 관련된
+	temp.z = z + op2.z;	// 원래의 의미를 갖는다.
+	return temp;
+}
+
+three_d three_d::operator=(three_d op2) {
+	x = op2.x;	// 이 문장들은 정수 치환이고
+	y = op2.y;	// =는 정수 치환과 관련된
+	z = op2.z;	// 원래의 의미를 갖는다.
+	return *this;
+} 	// 멤버 함수가 이항 연산자를 중복하기 위해 사용될 때, 연산자의 왼쪽에 있는 객체가 연산자 함수를 호출하며,
+	   this를 통해 묵시적으로 함수에 전달된다. 오른쪽의 객체는 연산자 함수에게 매개변수로서 전달된다.
+
+void three_d::show() {
+	cout << x << ", ";
+	cout << y << ", ";
+	cout << z << "\n";
+}
+
+int main() {
+	three_d a(1, 2, 3), b(10, 10, 10), c;
+	a.show();
+	b.show();
+	c = a + b;	// a와 b를 더한다.
+	c.show();
+	c = a + b + c; 	// a, b와 c를 더한다.
+	c.show();
+	c = b= a;		// 다중 치환을 보여준다.
+	c.show();
+	b.show();
+	return 0;
+}
+
+단항 연산자를 중복하기
+#include <iostream>
+using namespace std;
+
+class three_d {
+private:
+	int x, y, z;	// 3-D 좌표
+public:
+	three_d() { x= y = z = 0; }
+	three_d(int i, int j, int k) { x = i; y = j; z =k; }
+	
+	three_d operator+(three_d op2);	// op1을 포함하고 있다.
+	three_d operator=(three_d op2);	// op1을 포함하고 있따.
+	three_d operator++();	// ++의 접두사 버전
+	three_d operator++(int notused);	// ++의 접미사 버전
+	
+	void show();
+};
+
+three_d three_d::operator+(three_d op2) {
+	three_d temp;
+	temp.x = x + op2.x;	// 이 문장들은 정수 덧셈이고
+	temp.y = y + op2.y;	// + 는 정수 덧셈과 관련된
+	temp.z = z + op2.z;	// 원래의 의미를 갖는다.
+	return temp;
+}
+
+three_d three_d::operator=(three_d op2) {
+	x = op2.x;	// 이 문장들은 정수 치환이고
+	y = op2.y;	// =는 정수 치환과 관련된
+	z = op2.z;	// 원래의 의미를 갖는다.
+	return *this;
+}
+
+three_d three_d::operator++() {
+	x++; y++; z++;
+	return *this;	// 변경된 값을 반환
+}
+
+three_d three_d::operator++(int notused) {
+	three_d temp = *this;
+	x++; y++; z++; 
+	return temp;	// 원래의 값을 반환
+}
+	
+int main() {
+	three_d a(1, 2, 3), b(10, 10, 10), c;
+	a.show();
+	b.show();
+	c = a + b;	// a와 b를 더한다.
+	c.show();
+	c = a + b + c; 	// a, b와 c를 더한다.
+	c.show();
+	c = b= a;		// 다중 치환을 보여준다.
+	c.show();
+	b.show();
+	++c;	// 접두사 증가
+	c.show();
+	c++;	// 접미사 증가
+	c.show();
+	a = ++c;	// a는 증가 후에 c의 값을 받는다
+	a.show();	// a와 c는
+	c.show();	// 같다.
+	a = c++;	// a는 증가에 앞서 c의 값을 받는다
+	a.show();	// a와 c는
+	c.show();	// 지금 다르다.
+	return 0;
+}
+
+연산자 중복에 대한 힌트와 제약
+중복된 연산자에게 전혀 새로운 의미를 줄 수 있지만, 그것의 새로운 의미가 원래의 의미와 연관될 때가 가장 좋다.
+연산자 중복의 제약
+-연산자의 우선 순위를 변경할 수 없다.
+-연산자 함수가 피연산자를 무시할 수 있지만, 연산자에 의해 요구되는 피연산자의 수를 변경할 수 없다.
+-연산자 함수는 디폴트 인수를 가질 수 없다.
+중복할 수 없는 연산자 : | . :: .* ? | (4가지)
+
+비멤버 연산자 함수
+비멤버 함수를 사용하여 클래스를 위한 연산자를 중복할 수 있다.
+프렌드 함수를 포함하는 비멤버 함수들은 this 포인터를 가질 수 없으므로 프렌드가
+연산자를 중복하기 위해 사용될 때, 이항 연산자가 중복되면 두 피연산자가 명시적으로
+전달되고, 단항 연산자가 중복될 때 하나의 피연산자만 전달된다.
+비멤버 함수를 사용하여 중복될 수 없는 연산자들은 =, (), [], -> 이다.
+
+ex)
+// 프렌드를 사용하여 +를 중복한다.
+#include <iostream>
+using namespace std;
+
+class three_d {
+private:
+	int x, y, z;	// 3-D 좌표
+public:
+	three_d() { x = y = z = 0; }
+	three_d(int i , int j, int k) { x = i; y = j; z = k; }
+	
+	friend three_d operator+(three_d op1, three_d op2);
+	three_d operator=(three_d op2); 	// op2를 포함하고 있다.
+	
+	void show();
+};
+
+// 이것은 지금 프렌드 함수이다.
+three_d operator+(three_d op1, three_d op2) {
+	three_d temp;
+	
+	temp.x = op1.x + op2.x;
+	temp.y = op1.y + op2.y;
+	temp.z = op1.z + op2.z;
+	return temp;
+}
+
+// 치환을 중복한다.
+three_d three_d::operator=(three_d op2) {
+	x = op2.x;
+	y = op2.y;
+	z = op2.z;
+	return *this;
+}
+
+// x, y, z 좌표를 출력한다.
+void three_d::show() {
+	cout << x << ", ";
+	cout << y << ", ";
+	cout << z << '\n';
+} 
+
+int main() {
+	three_d a(1, 2, 3), b(10, 10, 10), c;
+	
+	a.show();
+	b.show();
+	
+	c = a + b;	// a와 b를 더한다.
+	c.show();
+	
+	c = a + b + c;	// a, b와 c를 덜한다.
+	c.show();
+	
+	c = b = a;	// 다중 치환을 보여준다.
+	c.show();
+	b.show();
+	
+	return 0;
+}
+
+단항 연산자를 중복하기
+// 이 프로그램은 프렌드 operator++() 함수를 사용한다.
+#include <iostream>
+using namespace std;
+
+class three_d {
+pivate:
+	int x, y, z;	// 3-D 좌표
+public:
+	three_d() { x = y = z = 0; }
+	three_d(int i, int j, int k) { x = i; y = j; z = k; }
+	
+	friend three_d operator+(three_d op1, three_d op2);
+	three_d operator=(three_d op2);
+	
+	// ++를 중복하기 위해 참조를 사용한다.
+	friend three_d operator++(three_d &op1);
+	friend three_d operator++(three_d op1, int notused);
+	
+	void show();
+};
+
+// 이것은 지금 프렌드 함수이다.
+three_d operator+(three_d op1, three_d op2) {
+	three_d temp;
+	
+	temp.x = op1.x + op2.x;
+	temp.y = op1.y + op2.y;
+	temp.z = op1.z + op2.z;
+	return temp;
+}
+
+// =를 중복한다.
+three_d three_d::operator=(three_d op2) {
+	x = op2.x;
+	y = op2.y;
+	z = op2.z;
+	return *this;
+}
+
+// 프렌드 함수를 사용하여 접두사 ++를 중복한다. 이것은 참조 매개변수의 사용을 필요로 한다.
+three_d operator++(three_d &op1) {
+	op1.x++;
+	op1.y++;
+	op1.z++;
+	return op1;	// 직접 증가시킨 값 리턴
+{
+
+// 프렌드 함수를 사용하여 접미사 ++를 중복한다. 이것은 참조 매개변수의 사용을 필요로 한다.
+three_d operator++(three_d &op1, int notused) {
+	three_d temp = op1;
+	
+	op1.x++;
+	op1.y++;
+	op1.z++;
+	return temp;	// 증가 전 값 리턴
+}
+
+// x, y, z좌표를 출력한다.
+void three_d::show() {
+	cout << x << ", ";
+	cout << y << ", ";
+	cout << z << "\n";
+}
+
+int main() {
+	three_d a(1, 2, 3), b(10, 10, 10), c;
+	a.show();
+	b.show();
+	c = a + b;	// a와 b를 더한다.
+	c.show();
+	c = a + b + c; 	// a, b와 c를 더한다.
+	c.show();
+	c = b= a;		// 다중 치환을 보여준다.
+	c.show();
+	b.show();
+	++c;	// 접두사 증가
+	c.show();
+	c++;	// 접미사 증가
+	c.show();
+	a = ++c;	// a는 증가 후에 c의 값을 받는다
+	a.show();	// a와 c는
+	c.show();	// 같다.
+	a = c++;	// a는 증가에 앞서 c의 값을 받는다
+	a.show();	// a와 c는
+	c.show();	// 지금 다르다.
+	return 0;
+}
+
