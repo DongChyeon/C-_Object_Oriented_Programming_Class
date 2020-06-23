@@ -17,16 +17,11 @@ int main() {
 	cout << s1 << ' ' << s2 << endl;
 }
 
-float avg(float arr[], int n) {
-	float sum = 0;
-	for (int i = 0; i < n; i++) sum += arr[i];
-	return sum / n;
-}
-
 void rev_str(char s1[]) {
 	char temp;
 	for (int i = 0; i < (int)(strlen(s1) / 2); i++) {
 		temp = s1[i];
+		// cout << i << " " << strlen(s1) - (i + 1) << "\n";	// 널 문자를 고려하자
 		s1[i] = s1[strlen(s1) - (i + 1)];
 		s1[strlen(s1) - (i + 1)] = temp;
 	}

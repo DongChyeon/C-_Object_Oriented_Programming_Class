@@ -2,14 +2,14 @@
 #include <iostream>
 using namespace std;
 
-float avg(float arr[], int n);
+float avg(float* arr, int n);
 
 int main() {
 	float arr[5] = { 1, 234, 32, 42, 5 };
 	cout << "arr[5]ÀÇ Æò±ÕÀº " << avg(arr, 5) << endl;
 }
 
-float avg(float arr[], int n) {
+float avg(float* arr, int n) {
 	float sum = 0;
 	for (int i = 0; i < n; i++) {
 		sum += arr[i];

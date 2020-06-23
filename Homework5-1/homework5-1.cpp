@@ -17,17 +17,11 @@ int main() {
 }
 
 int powerx(int x) {
-	int value;
-	value = x * x;
-
-	return value;
+	return pow(x, 2);
 }
 
 int powerx(int x, int y) {
-	int value = x;
-	for (int i = 1; i < y; i++) value *= x;
-
-	return value;
+	return pow(x, y);
 }
 
 int powerx(int x, int y, int z) {

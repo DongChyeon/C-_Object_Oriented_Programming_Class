@@ -9,10 +9,10 @@ int main() {
 	cout << "입력 : ";
 	gets_s(text);
 
-	for (int i = 0; i < sizeof(text) / sizeof(int); i++) {
-		if ((int)text[i] >= 65 && (int)text[i] <= 122) english++;
-		else if ((int)text[i] >= 48 && (int)text[i] <= 57) number++;
-		else if ((int)text[i] == 44 || (int)text[i] == 46 || (int)text[i] == 33) punctuation++;
+	for (int i = 0; text[i] != '\0'; i++) {
+		if (('A' <= text[i] && text[i] <= 'Z') || ('a' <= text[i] && text[i] <= 'z')) english++;
+		else if ('0' <= text[i] && text[i] <= '9') number++;
+		else if (text[i] == ',' || text[i] == '.' || text[i] == '!') punctuation++;
 	}
 	cout << "영문자의 개수는 " << english << endl;
 	cout << "숫자의 개수는 " << number << endl;

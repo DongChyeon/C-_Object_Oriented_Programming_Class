@@ -457,7 +457,7 @@ private:
 	char s[80];
 public:
 	void show() { cout <<  s << "\n"; }
-	void set(char *str) { strcpy(s, str)' }
+	void set(char *str) { strcpy(s, str); }
 };
 
 sample input() {
@@ -507,7 +507,7 @@ public:
 	myclass(int i);	// 정상적인 생성자
 	myclass(const myclass &obj);		// 복사 생성자
 	~myclass();
-	int getval { return *p; }
+	int getval() { return *p; }
 };
 
 myclass::myclass(const myclass &obj) {
@@ -548,9 +548,9 @@ using namespace std;
 
 class cl {
 private:
-	int il
+	int i;
 public:
-	void load_i(int val) { this->i val; }	// == i = val
+	void load_i(int val) { this->i = val; }	// == i = val
 	int get_i() {return this->i; }	// == return i
 };
 

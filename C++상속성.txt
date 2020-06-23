@@ -1,9 +1,9 @@
 상속성의 개요
 하나의 클래스가 다른 클래스를 자신의 선언 속으로 합병할 수 있게 함으로써 상속성을 지원
-각 파생 클래스는 일반적인 분류의 한 부분이지만 자신만의 요구에 정확히 맞게 할 수 있따.
+각 파생 클래스는 일반적인 분류의 한 부분이지만 자신만의 요구에 정확히 맞게 할 수 있다.
 
 상속을 위한 일반적인 형식
-class derived-class: acces base-class {
+class derived-class: access base-class {
 	body of new class
 };
 
@@ -18,7 +18,7 @@ plublic:
 	void set_wheels(int num) { wheels = num; }
 	int get_wheels() { return wheels; }
 	void set_pass(int num) { passengers = num; }
-	int get_pass() {return passengers; }
+	int get_pass() { return passengers; }
 };
 
 class truck : public road_vehicle {

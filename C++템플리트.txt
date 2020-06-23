@@ -1,6 +1,6 @@
 1. 일반 함수
 일반 함수란 여러 가지 자료형에 적용될 일반적인 연산들을 정의한다.
-일반 함수를 생성함으로써, 데이터의 종류와는 독립저긍로 알고리즘의 특성을 정의할 수 있다
+일반 함수를 생성함으로써, 데이터의 종류와는 독립적으로 알고리즘의 특성을 정의할 수 있다
 일반 함수가 정의되면 컴파일러는 함수가 실행될 때 사용되는 자료형을 위한 정확한 코드를 자동으로 만들어 낸다
 일반 함수는 키워드 template를 사용함으로써 생성된다
 형식
@@ -74,7 +74,7 @@ void swapargs(int &a, int &b) {
 }
 
 int main() {
-	int i = 10; j = 20;
+	int i = 10, j = 20;
 	double x = 10.1, y = 23.3;
 	char a = 'x', b = 'z';
 
@@ -200,7 +200,7 @@ public:
 };
 
 int main() {
-	myclass<int, double> ob(10, 0.23);
+	myclass<int, double> ob1(10, 0.23);
 	myclass<char, char *> ob2('X', "This is a test");
 	
 	ob1.show();	// int와 double을 보여준다.

@@ -1,0 +1,4 @@
+﻿  homework6-1.cpp
+C:\Users\Donghyeon Kim\source\repos\Object_Oriented_Programming_Class\Homework6-1\homework6-1.cpp(19,12): warning C4244: '=': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\Donghyeon Kim\source\repos\Object_Oriented_Programming_Class\Homework6-1\homework6-1.cpp(23,14): warning C4244: '=': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  Homework6-1.vcxproj -> C:\Users\Donghyeon Kim\source\repos\Object_Oriented_Programming_Class\x64\Debug\Homework6-1.exe
